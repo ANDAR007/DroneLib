@@ -24,8 +24,8 @@ def ping(ip, results, stop_event):
     if response.returncode == 0:  # Если пинг успешен
         results.append(ip)
         # Если достигли необходимого числа дронов, устанавливаем событие для остановки
-        if len(results) >= num_drones:
-            stop_event.set()
+        # if len(results) >= num_drones:
+        #     stop_event.set()
 
 
 def find_connected_drones(num_drones, subnet="192.168.137"):
@@ -57,10 +57,12 @@ def find_connected_drones(num_drones, subnet="192.168.137"):
     for thread in threads:
         thread.join()
 
+    print("Подключенные дроны:", connected_drones)
+
     return connected_drones
 
 
-# Использование функции
-num_drones = 1  # Количество дронов, которые нужно найти
-drones = find_connected_drones(num_drones)
-print("Подключенные дроны:", drones)
+# # Использование функции
+# num_drones = 1  # Количество дронов, которые нужно найти
+# drones = find_connected_drones(num_drones)
+# print("Подключенные дроны:", drones)

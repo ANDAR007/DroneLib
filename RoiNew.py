@@ -1,5 +1,5 @@
 import socket
-import time
+#import time
 import SearchIPold
 
 def emergency_land(socket_udp, addr):
@@ -56,9 +56,12 @@ def execute_flight_path(socket_udp, addr, movements):#, delay=1):
 def main():
     pc_ip = ''
     pc_port = 9000
-    num_drones = 2
+    num_drones = 3
     lo_ip = SearchIPold.find_connected_drones(num_drones)
-
+    print(lo_ip)
+    if len(lo_ip) != num_drones:
+        print('no conect all drones')
+        return False
     #tello_ip = '192.168.137.211'
     tello_port = 8889
     for tello_ip in lo_ip:
@@ -73,16 +76,18 @@ def main():
                 if battery_check(socket_udp, tello_addr):
                     if send_with_retry('takeoff', socket_udp, tello_addr):
                         if send_with_retry('flip f', socket_udp, tello_addr):
-                            if send_with_retry('up 30', socket_udp, tello_addr):
+                            if send_with_retry('back 20', socket_udp, tello_addr):
                                 battery_check(socket_udp, tello_addr)
+                                send_command('land', socket_udp, tello_addr)
+                                print(f'Дрон {tello_ip} садится')
                             else:
-                                print("Not working: up")
+                                print("Not working: back")
                         else:
                             print("Not working: flip")
                     else:
                         print("Not working: takeoff")
                 else:
-                    print("Not working: bat")
+                        print("Not working: bat")
             else:
                 print("Failed to enter SDK mode.")
         except Exception as e:
@@ -92,6 +97,8 @@ def main():
         #     socket_udp.close()
 
         socket_udp.close()
+
+
 #мб циклоприсвоить переменным айпи, а потом последовательно раздавать комманды на айпишники для одновременного управления
 if __name__ == "__main__":
     main()

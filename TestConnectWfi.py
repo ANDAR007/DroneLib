@@ -71,16 +71,16 @@ def main():
             if send_command ('command',socket_udp, tello_addr):
                 print("SDK mode enabled.")
                 if battery_check(socket_udp, tello_addr):
-                    if send_with_retry('takeoff', socket_udp, tello_addr):
-                        if send_with_retry('flip f', socket_udp, tello_addr):
-                            if send_with_retry('up 30', socket_udp, tello_addr):
-                                battery_check(socket_udp, tello_addr)
-                            else:
-                                print("Not working: up")
-                        else:
-                            print("Not working: flip")
-                    else:
-                        print("Not working: takeoff")
+                    battery_check(socket_udp, tello_addr) # if send_with_retry('takeoff', socket_udp, tello_addr):
+                            # if send_with_retry('flip f', socket_udp, tello_addr):
+                            #     if send_with_retry('up 30', socket_udp, tello_addr):
+                            #         battery_check(socket_udp, tello_addr)
+                            #     else:
+                            #         print("Not working: up")
+                            # else:
+                            #     print("Not working: flip")
+                    # else:
+                    #     print("Not working: takeoff")
                 else:
                     print("Not working: bat")
             else:
@@ -92,6 +92,5 @@ def main():
         #     socket_udp.close()
 
         socket_udp.close()
-#мб циклоприсвоить переменным айпи, а потом последовательно раздавать комманды на айпишники для одновременного управления
 if __name__ == "__main__":
     main()

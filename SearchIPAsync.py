@@ -54,6 +54,6 @@ async def find_connected_drones(num_drones, subnet="192.168.137"):
 
 # Основная точка входа
 if __name__ == "__main__":
-    num_drones = 2  # Количество дронов, которые нужно найти
+    num_drones = 5  # Количество дронов, которые нужно найти
     drones = asyncio.run(find_connected_drones(num_drones))
     print("Подключенные дроны:", drones)

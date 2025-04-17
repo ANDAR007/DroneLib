@@ -28,7 +28,7 @@ def send_with_retry(command, socket_udp, addr, retries=3):
 def main():
     pc_ip = ''
     pc_port = 9000
-    tello_ip = '192.168.10.1'
+    tello_ip = '192.168.4.1'#'192.168.10.1'
     tello_port = 8889
     tello_addr = (tello_ip, tello_port)
 

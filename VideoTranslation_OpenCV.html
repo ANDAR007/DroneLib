@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drone Video Stream</title>
+</head>
+<body>
+    <h1>Трансляция с дрона</h1>
+    <img id="video-stream" width="640" height="480" alt="Видео с дрона">
+
+    <script>
+        const ws = new WebSocket('ws://localhost:8766');
+        const videoElement = document.getElementById('video-stream');
+
+        ws.onmessage = (event) => {
+            // Принимаем кадр и отображаем
+            videoElement.src = 'data:image/jpeg;base64,' + event.data;
+        };
+
+        ws.onopen = () => {
+            console.log("Подключение к видеопотоку установлено.");
+        };
+
+        ws.onclose = () => {
+            console.log("Соединение с сервером закрыто.");
+        };
+    </script>
+</body>
+</html>

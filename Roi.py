@@ -43,7 +43,7 @@ def control_drone(ip, port=8889):
         # time.sleep(1)  # Задержка между командами
 
 def main():
-    num_drones = 2  # Количество дронов, которые нужно найти
+    num_drones = 4  # Количество дронов, которые нужно найти
     drone_ips = asyncio.run(SearchIPAsync.find_connected_drones(num_drones))
     # drone_ips = ["192.168.137.117", "192.168.137.206"]
     # ip123 = "192.168.137.5"
@@ -56,5 +56,9 @@ def main():
         print(f"Управление дроном с IP {ip}")
         control_drone(ip)
 
+
+#Сделать управление с клавиатуры, подключить видеопоток.
+# LED панель подключить
+#подключить 5 дронов
 if __name__ == "__main__":
     main()
