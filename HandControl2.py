@@ -4,9 +4,7 @@ import asyncio
 import keyboard
 import threading
 import SearchIPAsync
-import cv2
 
-# Блокировка для вывода в консоль
 console_lock = threading.Lock()
 
 
@@ -37,9 +35,7 @@ def send_with_retry(command, socket_udp, addr, retries=3, delay=1):
 
 
 def control_drone(ip, port=8889):
-    """
-    Управление одним БПЛА.
-    """
+#    Управление одним БПЛА.
     addr = (ip, port)
 
     # Включаем режим SDK
@@ -51,35 +47,14 @@ def control_drone(ip, port=8889):
     print(f"Отправка команды 'takeoff' на {ip}...")
     response = send_command("takeoff", addr, timeout=10)
     print(f"ответ: {response}")
-    time.sleep(3)  # Даем БПЛА стабилизироваться
-    # if response is None:
-    #     print(f"Не получили ответ от {ip}, продолжаем управление...")
+    time.sleep(3)  # стаб дрона
 
     # Поднимаем дрон на 50 см
     send_command("up 50", addr)
 
     print("ГОТОВ К УПРАВЛЕНИЮ!")
 
-
-    cap: cv2.VideoCapture = cv2.VideoCapture(f"udp://@0.0.0.0:11111")
-
-    send_command("streamon", addr)
-    if not cap.isOpened():
-        print("Не удалось открыть видеопоток!")
-        return
-
     while True:
-        ret, frame = cap.read()
-        if ret:
-            cv2.imshow("Видеопоток с Tello", frame)
-            # Нажмите 'q' для выхода
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                print("Выход из видеопотока!")
-                break
-        else:
-            print("Ошибка получения кадра!")
-            break
-
         if keyboard.is_pressed("w"):
             print("Дрон летит вперёд")
             send_command("forward 50", addr)
@@ -122,23 +97,14 @@ def control_drone(ip, port=8889):
             # send_command('battery?', addr)
             # battery_response = battery_level = int(battery_response)
             # print(f"ip {addr} Battery: {battery_level}%")
-            break  # Выход из цикла
+            break
 
 
-        time.sleep(0.1)  # Уменьшаем нагрузку на процессор
-    cap.release()
-    cv2.destroyAllWindows()
+        time.sleep(0.1)
     print("Соединение закрыто.")
 
 
 def receive_all(sock: socket.socket, count: int) -> bytes:
-    """
-        Получает точно count байт из сокета.
-
-        :param sock: Сокет для чтения данных.
-        :param count: Количество байт, которые необходимо получить.
-        :return: Полученные данные в виде байтов.
-        """
     buf = b""
     while len(buf) < count:
         new_buf = sock.recv(count - len(buf))
@@ -146,26 +112,6 @@ def receive_all(sock: socket.socket, count: int) -> bytes:
             break
         buf += new_buf
     return buf
-
-def VideoStream(ip):
-    cap: cv2.VideoCapture = cv2.VideoCapture(f"udp://@{ip}:11111")
-    if not cap.isOpened():
-        print("Не удалось открыть видеопоток!")
-        return
-
-    while True:
-        ret, frame = cap.read()
-        if ret:
-            cv2.imshow("Видеопоток с Tello", frame)
-            # Нажмите 'q' для выхода
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-        else:
-            print("Ошибка получения кадра!")
-            break
-    cap.release()
-    cv2.destroyAllWindows()
-    print("Соединение закрыто.")
 
 
 def main():
@@ -195,7 +141,6 @@ def main():
 if __name__ == "__main__":
     main()
 
-# Нужно будет добавить функцию поворота на 90 и узнать заряд батареи. Убрать ошибки при отправке команды
 # Управление:
 # WASD — движение
 # Стрелки — вверх/вниз
